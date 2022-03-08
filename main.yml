@@ -1,0 +1,38 @@
+---
+  - name: Playing with Ansible
+    hosts: localhost
+    tasks:
+
+    - name: just execute a ls -lrt command
+      shell: "ls -lrt"
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - debug: var=output
+
+    - name: create new files
+      file:
+        path: ~/{{ item }}
+        state: touch
+      with_items:
+        - a.txt
+        - b.txt
+        - c.txt
+
+    - name: check if the file exists
+      stat:
+        path: "~/{{ item }}"
+      with_items:
+        - a.txt
+        - b.txt
+        - c.txt
+      register: text_file_exists
+      # failed_when: "{{ text_file_exists | length }} != 3"
+
+    - debug: var="text_file_exists.results | length"
+
+    - name: fail if the size is not 3
+      fail: msg="configs do not exist - length is {{text_file_exists.results | length}}"
+      when:
+        - text_file_exists.results | length != 3
