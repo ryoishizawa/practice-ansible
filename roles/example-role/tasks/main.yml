@@ -1,0 +1,16 @@
+---
+- name: get template file
+  template:
+    src: template.txt
+    dest: "~/tmp/"
+  register: template_registered
+
+- name: get template2 file
+  template:
+    src: template2.txt
+    dest: "~/tmp/"
+  when: template_registered.failed == true
+  register: template2_registered
+
+- debug: var="template_registered"
+- debug: var="template2_registered"

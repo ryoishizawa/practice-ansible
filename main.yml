@@ -11,6 +11,14 @@
 
     - debug: var=output
 
+    - name: define variable
+      set_fact:
+        boolean_value: 'false'
+
+    - name: test echo
+      shell: "echo hello"
+      when: boolean_value == 'false'
+
     - name: create new files
       file:
         path: ~/{{ item }}
@@ -36,3 +44,6 @@
       fail: msg="configs do not exist - length is {{text_file_exists.results | length}}"
       when:
         - text_file_exists.results | length != 3
+
+    roles:
+      - role: example-role
